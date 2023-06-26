@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Network to scan
+network="192.168.1"
+
+# Output file
+output_file="ping_results.txt"
+
+# Clear the output file
+echo "" > $output_file
+
+# Total number of hosts to scan
+total_hosts=254
+
+# Ping each IP in the network
+for ip in $(seq 1 $total_hosts); do
+    (ping -c 1 -W 1 $network.$ip &> /dev/null && echo "$network.$ip" >> $output_file && printf "Progress: %d%%\r" $((ip*100/total_hosts))) &
+done
+
+# Wait for all background jobs to finish
+wait
+
+# Print completed message
+echo -e "\nPing sweep completed."
